@@ -4,15 +4,51 @@
 
 @layer base {
   body {
-    @apply font-sans antialiased text-slate-800 bg-slate-50;
+    @apply font-sans antialiased text-slate-800 bg-[#F4F5F7];
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply font-heading font-bold text-gov-navy tracking-tight;
+    @apply font-heading font-bold text-[#0B2348] tracking-tight;
   }
 }
 
-/* Print Certificate Specific Styling */
+/* Custom Font Scale Helper Classes */
+body.font-scale-small {
+  font-size: 13px;
+}
+
+body.font-scale-large {
+  font-size: 16px;
+}
+
+/* High Contrast Mode Override */
+body.high-contrast {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+body.high-contrast header,
+body.high-contrast nav,
+body.high-contrast footer,
+body.high-contrast div {
+  background-color: #0a0a0a !important;
+  color: #ffffff !important;
+  border-color: #333333 !important;
+}
+
+body.high-contrast button {
+  border: 1px solid #ffffff !important;
+}
+
+/* Custom Hero Background Pattern Simulation */
+.gov-monument-bg {
+  background-image: linear-gradient(180deg, rgba(7, 21, 47, 0.85) 0%, rgba(11, 35, 72, 0.92) 100%), 
+                    url('https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=1600&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center 30%;
+}
+
+/* Custom Print Certificate Styles */
 @media print {
   body * {
     visibility: hidden;
@@ -49,25 +85,4 @@
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
-}
-
-/* Custom Pulsing Badge */
-.pulse-badge {
-  box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
-  animation: pulse-red 2s infinite;
-}
-
-@keyframes pulse-red {
-  0% {
-    transform: scale(0.98);
-    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
-  }
-  70% {
-    transform: scale(1);
-    box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
-  }
-  100% {
-    transform: scale(0.98);
-    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
-  }
 }

@@ -5,7 +5,7 @@ import {
 import { useLM } from '../../context/LMContext';
 
 export const HowItWorksPage: React.FC = () => {
-  const { setCurrentTab, loginAsDemo } = useLM();
+  const { setCurrentTab, loginAsDemo, language } = useLM();
   const [activeStep, setActiveStep] = useState<number>(1);
 
   const steps = [
@@ -15,7 +15,7 @@ export const HowItWorksPage: React.FC = () => {
       role: "Trader / Manufacturer",
       icon: Building,
       summary: "Trader registers instrument parameters, manufacturer, serial number, accuracy class, and shop GPS premises location.",
-      details: "System generates a unique LM-DVS Device ID (e.g. LM-DVS-2026-000928) and a 128-bit cryptographic UUID.",
+      details: "System generates a unique Legal Metrix Device ID (e.g. LM-DVS-2026-000928) and a 128-bit cryptographic UUID.",
       actionText: "Try Trader Registration Wizard",
       actionRole: "trader" as const
     },
@@ -66,7 +66,9 @@ export const HowItWorksPage: React.FC = () => {
       
       <div className="text-center space-y-2">
         <span className="text-xs font-bold text-gov-saffron uppercase tracking-widest">End-to-End Governance Workflow</span>
-        <h1 className="font-heading font-extrabold text-3xl sm:text-4xl text-gov-navy">How LM-DVS Works</h1>
+        <h1 className="font-heading font-extrabold text-3xl sm:text-4xl text-[#0B2348]">
+          {language === 'hi' ? 'लीगल मैट्रिक्स कैसे काम करता है' : 'How Legal Metrix Works'}
+        </h1>
         <p className="text-slate-600 text-sm max-w-xl mx-auto">
           Click through each stage to explore how the digital legal metrology lifecycle operates.
         </p>
@@ -80,7 +82,7 @@ export const HowItWorksPage: React.FC = () => {
             onClick={() => setActiveStep(s.num)}
             className={`flex-1 min-w-[150px] p-3 rounded-xl border text-left transition-all ${
               activeStep === s.num
-                ? 'bg-gov-navy text-white border-gov-navy shadow-md'
+                ? 'bg-[#0B2348] text-white border-[#0B2348] shadow-md'
                 : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
             }`}
           >
@@ -106,7 +108,7 @@ export const HowItWorksPage: React.FC = () => {
             
             <div className="md:col-span-8 space-y-4">
               <div className="flex items-center space-x-2">
-                <span className="bg-amber-500/10 text-amber-700 font-bold text-xs px-2.5 py-1 rounded border border-amber-300">
+                <span className="bg-amber-500/10 text-amber-800 font-bold text-xs px-2.5 py-1 rounded border border-amber-300">
                   STAGE 0{step.num} — {step.role.toUpperCase()}
                 </span>
               </div>
@@ -131,7 +133,7 @@ export const HowItWorksPage: React.FC = () => {
                     else if (step.actionRole === 'inspector') setCurrentTab('inspector-field');
                     else setCurrentTab('admin-command');
                   }}
-                  className="bg-gov-saffron hover:bg-amber-600 text-slate-950 font-bold text-xs px-5 py-2.5 rounded-lg transition-all shadow flex items-center space-x-2 border border-amber-400"
+                  className="bg-gov-red hover:bg-red-700 text-white font-extrabold text-xs px-5 py-2.5 rounded-lg transition-all shadow flex items-center space-x-2"
                 >
                   <span>{step.actionText}</span>
                   <ArrowRight className="w-4 h-4" />
@@ -139,7 +141,7 @@ export const HowItWorksPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="md:col-span-4 bg-slate-900 text-white p-6 rounded-2xl border border-slate-800 flex flex-col items-center justify-center text-center space-y-3">
+            <div className="md:col-span-4 bg-[#07152F] text-white p-6 rounded-2xl border border-slate-800 flex flex-col items-center justify-center text-center space-y-3">
               <div className="w-16 h-16 rounded-full bg-amber-400/20 border border-amber-400/50 flex items-center justify-center text-amber-400">
                 <Icon className="w-8 h-8" />
               </div>

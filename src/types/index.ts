@@ -1,5 +1,8 @@
 export type UserRole = 'public' | 'trader' | 'inspector' | 'admin';
 
+export type LanguageMode = 'en' | 'hi';
+export type FontSizeScale = 'small' | 'normal' | 'large';
+
 export interface UserProfile {
   id: string;
   name: string;
@@ -18,13 +21,13 @@ export type VerificationType = 'INITIAL' | 'RE-VERIFICATION' | 'POST_REPAIR' | '
 export type AccuracyClass = 'CLASS_I' | 'CLASS_II' | 'CLASS_III' | 'CLASS_IIII';
 
 export interface Instrument {
-  id: string; // e.g. LM-DVS-2026-000928
+  id: string; // e.g. LM-DVS-2026-000928 / NLMVS-2026-000928
   uuid: string; // Cryptographic UUID
   qrToken: string;
   qrSignature: string;
   isTampered?: boolean;
   serialNumber: string;
-  type: string; // e.g. "Electronic Weighing Scale", "Weighbridge 50T", "Fuel Dispensing Pump"
+  type: string; // e.g. "Electronic Counter Weighing Scale", "Weighbridge 50T", "Fuel Dispensing Pump"
   category: 'WEIGHING_SCALE' | 'WEIGHBRIDGE' | 'FUEL_DISPENSER' | 'PLATFORM_SCALE' | 'RETAIL_MEASURE' | 'OTHER';
   manufacturer: string;
   model: string;
@@ -150,9 +153,9 @@ export interface RiskAnomalyAlert {
   type: 'HIGH_FREQUENCY' | 'GPS_MISMATCH' | 'QR_TAMPER' | 'DUPLICATE_REG' | 'UNUSUALLY_HIGH_PASS';
   title: string;
   description: string;
-  entityId: string; // Inspector ID or Device ID
+  entityId: string;
   entityType: 'INSPECTOR' | 'INSTRUMENT' | 'CERTIFICATE';
-  riskScore: number; // 0 to 100
+  riskScore: number;
   timestamp: string;
   status: 'ACTIVE' | 'INVESTIGATING' | 'RESOLVED';
 }
@@ -168,13 +171,10 @@ export interface AuditLog {
   ipAddress: string;
 }
 
-export interface PaymentTransaction {
-  id: string; // LMTXN202608271234
-  instrumentId: string;
-  traderId: string;
-  amount: number;
-  paymentMethod: 'UPI' | 'CARD' | 'NET_BANKING' | 'BHARATKOSH';
-  status: 'SUCCESS' | 'FAILED' | 'PENDING';
-  timestamp: string;
-  receiptNumber: string;
+export interface ApplicationStatusStep {
+  step: number;
+  label: string;
+  labelHi: string;
+  date?: string;
+  status: 'COMPLETED' | 'IN_PROGRESS' | 'PENDING';
 }

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { ShieldCheck, Lock, User, Key, ArrowRight, CheckCircle2, SlidersHorizontal } from 'lucide-react';
+import { ShieldCheck, Lock, User, Key, Scale, ArrowRight } from 'lucide-react';
 import { useLM } from '../../context/LMContext';
 import { UserRole } from '../../types';
 
 export const LoginPage: React.FC = () => {
-  const { loginAsDemo } = useLM();
+  const { loginAsDemo, language } = useLM();
   
   const [selectedRole, setSelectedRole] = useState<UserRole>('trader');
   const [email, setEmail] = useState<string>('trader@lmdvs.demo');
@@ -32,11 +32,13 @@ export const LoginPage: React.FC = () => {
       <div className="bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden">
         
         {/* Header */}
-        <div className="bg-gov-navy text-white p-6 text-center space-y-2 border-b border-slate-800">
-          <div className="w-12 h-12 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center mx-auto shadow-md">
-            <ShieldCheck className="w-7 h-7 stroke-[2.5]" />
+        <div className="bg-[#0B2348] text-white p-6 text-center space-y-2 border-b border-slate-800">
+          <div className="w-12 h-12 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center mx-auto shadow-md">
+            <Scale className="w-7 h-7 stroke-[2.2]" />
           </div>
-          <h2 className="font-heading font-extrabold text-xl text-white">LM-DVS Secure Portal Login</h2>
+          <h2 className="font-heading font-extrabold text-xl text-white">
+            {language === 'hi' ? 'लीगल मैट्रिक्स सुरक्षित पोर्टल लॉगिन' : 'Legal Metrix Secure Portal Login'}
+          </h2>
           <p className="text-xs text-slate-300">Government of India — Legal Metrology Division</p>
         </div>
 
@@ -46,7 +48,7 @@ export const LoginPage: React.FC = () => {
             onClick={() => handleRoleChange('trader')}
             className={`py-2 rounded-lg border transition-all ${
               selectedRole === 'trader'
-                ? 'bg-gov-saffron text-slate-950 border-amber-400 shadow-xs'
+                ? 'bg-gov-saffron text-white border-amber-500 shadow-xs font-extrabold'
                 : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
             }`}
           >
@@ -57,7 +59,7 @@ export const LoginPage: React.FC = () => {
             onClick={() => handleRoleChange('inspector')}
             className={`py-2 rounded-lg border transition-all ${
               selectedRole === 'inspector'
-                ? 'bg-gov-navy text-white border-slate-900 shadow-xs'
+                ? 'bg-[#0B2348] text-white border-slate-900 shadow-xs font-extrabold'
                 : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
             }`}
           >
@@ -68,7 +70,7 @@ export const LoginPage: React.FC = () => {
             onClick={() => handleRoleChange('admin')}
             className={`py-2 rounded-lg border transition-all ${
               selectedRole === 'admin'
-                ? 'bg-purple-700 text-white border-purple-800 shadow-xs'
+                ? 'bg-purple-800 text-white border-purple-900 shadow-xs font-extrabold'
                 : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
             }`}
           >
@@ -112,16 +114,16 @@ export const LoginPage: React.FC = () => {
               <input type="checkbox" defaultChecked className="rounded border-slate-300 text-amber-500" />
               <span>Remember session</span>
             </label>
-            <a href="#" className="text-amber-700 hover:underline font-semibold">Forgot Password?</a>
+            <a href="#" className="text-amber-800 hover:underline font-semibold">Forgot Password?</a>
           </div>
 
           <button
             type="submit"
             disabled={isAuthenticating}
-            className="w-full py-3 bg-gov-navy hover:bg-slate-800 text-white font-extrabold text-sm rounded-lg transition-all shadow flex items-center justify-center space-x-2"
+            className="w-full py-3 bg-[#0B2348] hover:bg-[#102A52] text-white font-extrabold text-sm rounded-lg transition-all shadow flex items-center justify-center space-x-2"
           >
             {isAuthenticating ? (
-              <span>Authenticating Government Session...</span>
+              <span>Authenticating Session...</span>
             ) : (
               <>
                 <Key className="w-4 h-4 text-amber-400" />

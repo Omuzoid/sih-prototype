@@ -10,6 +10,7 @@ import { ToastContainer } from './components/common/ToastContainer';
 import { LandingPage } from './components/public/LandingPage';
 import { PublicQRVerification } from './components/public/PublicQRVerification';
 import { CitizenComplaintModal } from './components/public/CitizenComplaintModal';
+import { TrackApplicationPage } from './components/public/TrackApplicationPage';
 import { HowItWorksPage } from './components/public/HowItWorksPage';
 import { AboutPage } from './components/public/AboutPage';
 import { LoginPage } from './components/public/LoginPage';
@@ -18,7 +19,6 @@ import { LoginPage } from './components/public/LoginPage';
 import { TraderDashboard } from './components/trader/TraderDashboard';
 import { RegisterInstrumentWizard } from './components/trader/RegisterInstrumentWizard';
 import { FeeCalculatorModal } from './components/trader/FeeCalculatorModal';
-import { SlotBookingModal } from './components/trader/SlotBookingModal';
 
 // Inspector Components
 import { InspectorMobileApp } from './components/inspector/InspectorMobileApp';
@@ -29,8 +29,6 @@ import { AdminDashboard } from './components/admin/AdminDashboard';
 const AppContent: React.FC = () => {
   const { currentTab, setCurrentTab } = useLM();
   const [isDemoControlsOpen, setIsDemoControlsOpen] = useState<boolean>(false);
-  const [isStandaloneComplaintOpen, setIsStandaloneComplaintOpen] = useState<boolean>(false);
-  const [isStandaloneCalculatorOpen, setIsStandaloneCalculatorOpen] = useState<boolean>(false);
 
   const renderTabContent = () => {
     switch (currentTab) {
@@ -38,11 +36,12 @@ const AppContent: React.FC = () => {
         return <LandingPage />;
       case 'public-qr':
         return <PublicQRVerification />;
+      case 'track-app':
+        return <TrackApplicationPage />;
       case 'citizen-complaint':
         return (
           <div className="space-y-6 max-w-4xl mx-auto px-4 py-8">
             <PublicQRVerification />
-            {/* Opens Complaint Modal */}
             <CitizenComplaintModal onClose={() => setCurrentTab('home')} />
           </div>
         );
@@ -56,6 +55,7 @@ const AppContent: React.FC = () => {
       // Trader Tab Actions
       case 'trader-dashboard':
       case 'trader-certificates':
+      case 'trader-booking':
         return <TraderDashboard />;
       case 'trader-register':
         return <RegisterInstrumentWizard />;
@@ -66,8 +66,6 @@ const AppContent: React.FC = () => {
             <FeeCalculatorModal onClose={() => setCurrentTab('trader-dashboard')} />
           </div>
         );
-      case 'trader-booking':
-        return <TraderDashboard />;
       
       // Inspector Tab Actions
       case 'inspector-field':
@@ -91,7 +89,7 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 font-sans selection:bg-amber-100 selection:text-amber-900">
+    <div id="main-content" className="min-h-screen flex flex-col bg-[#F4F5F7] text-slate-800 font-sans selection:bg-amber-100 selection:text-amber-900">
       
       {/* Header */}
       <Header onOpenDemoControls={() => setIsDemoControlsOpen(true)} />

@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { 
   UserProfile, Instrument, InspectionRecord, Certificate, 
-  CitizenComplaint, RiskAnomalyAlert, AuditLog, UserRole 
+  CitizenComplaint, RiskAnomalyAlert, AuditLog, UserRole,
+  LanguageMode, FontSizeScale, ApplicationStatusStep
 } from '../types';
 import { 
   DEMO_USERS, INITIAL_INSTRUMENTS, INITIAL_INSPECTIONS, 
@@ -26,6 +27,22 @@ interface LMContextType {
   loginAsDemo: (role: UserRole) => void;
   logout: () => void;
   
+  // Accessibility & Bilingual State
+  language: LanguageMode;
+  setLanguage: (lang: LanguageMode) => void;
+  fontSizeScale: FontSizeScale;
+  setFontSizeScale: (scale: FontSizeScale) => void;
+  isHighContrast: boolean;
+  setIsHighContrast: (contrast: boolean) => void;
+
+  // Global Search & Navigation
+  globalSearchQuery: string;
+  setGlobalSearchQuery: (q: string) => void;
+  globalSearchCategory: string;
+  setGlobalSearchCategory: (cat: string) => void;
+  currentTab: string;
+  setCurrentTab: (tab: string) => void;
+
   // Data stores
   instruments: Instrument[];
   inspections: InspectionRecord[];
@@ -47,27 +64,30 @@ interface LMContextType {
   toggleQRTamperSimulation: (instrumentId: string) => void;
   triggerDemoAnomaly: () => void;
   resetDemoData: () => void;
-  
+  getApplicationTimeline: (id: string) => { instrument?: Instrument; steps: ApplicationStatusStep[] } | null;
+
   // UI Toasts
   toasts: Toast[];
   addToast: (type: Toast['type'], title: string, message: string) => void;
   removeToast: (id: string) => void;
-  
-  // Navigation helper tab
-  currentTab: string;
-  setCurrentTab: (tab: string) => void;
 }
 
 const LMContext = createContext<LMContextType | undefined>(undefined);
 
-const LOCAL_STORAGE_KEY = 'lmdvs_sih_2026_demo_state_v1';
+const LOCAL_STORAGE_KEY = 'legal_metrix_sih_2026_state_v2';
 
 export const LMProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Load state from localStorage or initialize with seed data
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(() => DEMO_USERS[0]);
   const [activeRole, setActiveRole] = useState<UserRole>('public');
   const [currentTab, setCurrentTab] = useState<string>('home');
+  const [language, setLanguage] = useState<LanguageMode>('en');
+  const [fontSizeScale, setFontSizeScale] = useState<FontSizeScale>('normal');
+  const [isHighContrast, setIsHighContrast] = useState<boolean>(false);
   const [isOfflineMode, setIsOfflineMode] = useState<boolean>(false);
+  
+  const [globalSearchQuery, setGlobalSearchQuery] = useState<string>('');
+  const [globalSearchCategory, setGlobalSearchCategory] = useState<string>('All Categories');
+  
   const [toasts, setToasts] = useState<Toast[]>([]);
 
   const [instruments, setInstruments] = useState<Instrument[]>(() => {
@@ -105,7 +125,7 @@ export const LMProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     return saved ? JSON.parse(saved) : [];
   });
 
-  // Save to LocalStorage whenever state changes
+  // LocalStorage Sync
   useEffect(() => {
     localStorage.setItem(`${LOCAL_STORAGE_KEY}_instruments`, JSON.stringify(instruments));
   }, [instruments]);
@@ -134,13 +154,11 @@ export const LMProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     localStorage.setItem(`${LOCAL_STORAGE_KEY}_offline_queue`, JSON.stringify(offlineQueue));
   }, [offlineQueue]);
 
-  // Toast notifications
+  // Toast Notifications
   const addToast = (type: Toast['type'], title: string, message: string) => {
     const id = Math.random().toString(36).substring(2, 9);
     setToasts(prev => [...prev, { id, type, title, message }]);
-    setTimeout(() => {
-      removeToast(id);
-    }, 4500);
+    setTimeout(() => removeToast(id), 4500);
   };
 
   const removeToast = (id: string) => {
@@ -165,7 +183,7 @@ export const LMProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     setActiveRole(role);
     const user = DEMO_USERS.find(u => u.role === role) || DEMO_USERS[0];
     setCurrentUser(user);
-    if (role === 'admin') setCurrentTab('command-center');
+    if (role === 'admin') setCurrentTab('admin-command');
     else if (role === 'trader') setCurrentTab('trader-dashboard');
     else if (role === 'inspector') setCurrentTab('inspector-field');
     else setCurrentTab('home');
@@ -233,7 +251,6 @@ export const LMProvider: React.FC<{ children: React.ReactNode }> = ({ children }
       return inst;
     }));
 
-    // Create a scheduled inspection record
     const targetInst = instruments.find(i => i.id === instrumentId);
     if (targetInst) {
       const newInsp: InspectionRecord = {
@@ -262,21 +279,17 @@ export const LMProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   // Inspector Actions
   const submitInspection = (record: InspectionRecord) => {
     if (isOfflineMode) {
-      // Store in offline queue
       const offlineRecord = { ...record, status: 'SYNC_PENDING' as const, createdOffline: true };
       setOfflineQueue(prev => [...prev, offlineRecord]);
       addToast('warning', 'Saved Offline', `Inspection saved to local offline storage queue.`);
       return;
     }
 
-    // Direct submission
     const isPass = record.overallMpeResult === 'PASS';
     const certId = isPass ? `LM-CERT-2026-${Math.floor(10000 + Math.random() * 90000)}` : undefined;
 
-    // Update inspection list
     setInspections(prev => prev.map(i => i.id === record.id ? record : i));
 
-    // Update target instrument
     setInstruments(prev => prev.map(inst => {
       if (inst.id === record.instrumentId) {
         const today = new Date().toISOString().split('T')[0];
@@ -294,7 +307,6 @@ export const LMProvider: React.FC<{ children: React.ReactNode }> = ({ children }
       return inst;
     }));
 
-    // If Passed, issue Digital Certificate
     if (isPass && certId) {
       const inst = instruments.find(i => i.id === record.instrumentId);
       if (inst) {
@@ -351,7 +363,6 @@ export const LMProvider: React.FC<{ children: React.ReactNode }> = ({ children }
 
     setComplaints(prev => [newCmp, ...prev]);
     
-    // Increment instrument risk score if associated
     if (data.instrumentId) {
       setInstruments(prev => prev.map(inst => {
         if (inst.id === data.instrumentId) {
@@ -414,7 +425,73 @@ export const LMProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     setAuditLogs(INITIAL_AUDIT_LOGS);
     setOfflineQueue([]);
     localStorage.clear();
-    addToast('info', 'Demo Reset', 'All system state reset to initial SIH 2026 seed baseline.');
+    addToast('info', 'Demo Reset', 'All system state reset to initial Legal Metrix baseline.');
+  };
+
+  // Application Tracking Timeline Generator
+  const getApplicationTimeline = (searchId: string) => {
+    const term = searchId.trim().toLowerCase();
+    const inst = instruments.find(i => 
+      i.id.toLowerCase() === term || 
+      i.uuid.toLowerCase() === term ||
+      (i.appointmentId && i.appointmentId.toLowerCase() === term)
+    );
+
+    if (!inst) return null;
+
+    const steps: ApplicationStatusStep[] = [
+      {
+        step: 1,
+        label: 'Application & Registration Submitted',
+        labelHi: 'आवेदन और पंजीकरण प्रस्तुत किया गया',
+        date: inst.registrationDate,
+        status: 'COMPLETED'
+      },
+      {
+        step: 2,
+        label: 'Document & Premise Verification',
+        labelHi: 'दस्तावेज़ और परिसर का सत्यापन',
+        date: inst.registrationDate,
+        status: 'COMPLETED'
+      },
+      {
+        step: 3,
+        label: 'Statutory Fee Payment',
+        labelHi: 'वैधानिक शुल्क भुगतान',
+        date: inst.registrationDate,
+        status: inst.feePaid ? 'COMPLETED' : 'IN_PROGRESS'
+      },
+      {
+        step: 4,
+        label: 'Inspection Slot Booked',
+        labelHi: 'निरीक्षण स्लॉट बुक किया गया',
+        date: inst.appointmentDate || (inst.feePaid ? 'Awaiting Booking' : undefined),
+        status: inst.appointmentId ? 'COMPLETED' : inst.feePaid ? 'IN_PROGRESS' : 'PENDING'
+      },
+      {
+        step: 5,
+        label: 'GPS Field Inspection & MPE Check',
+        labelHi: 'जीपीएस क्षेत्र निरीक्षण और एमपीई जांच',
+        date: inst.lastVerificationDate || (inst.appointmentDate ? inst.appointmentDate : undefined),
+        status: inst.status === 'VERIFIED' || inst.status === 'REJECTED' ? 'COMPLETED' : inst.appointmentId ? 'IN_PROGRESS' : 'PENDING'
+      },
+      {
+        step: 6,
+        label: 'Digital Certificate Generation',
+        labelHi: 'डिजिटल प्रमाणपत्र निर्माण',
+        date: inst.lastVerificationDate,
+        status: inst.certificateId ? 'COMPLETED' : inst.status === 'VERIFIED' ? 'IN_PROGRESS' : 'PENDING'
+      },
+      {
+        step: 7,
+        label: 'HMAC QR Verification Seal Assigned',
+        labelHi: 'एचएमएसी क्यूआर सत्यापन सील प्रदान की गई',
+        date: inst.lastVerificationDate,
+        status: inst.certificateId ? 'COMPLETED' : 'PENDING'
+      }
+    ];
+
+    return { instrument: inst, steps };
   };
 
   return (
@@ -425,6 +502,16 @@ export const LMProvider: React.FC<{ children: React.ReactNode }> = ({ children }
       setActiveRole,
       loginAsDemo,
       logout,
+      language,
+      setLanguage,
+      fontSizeScale,
+      setFontSizeScale,
+      isHighContrast,
+      setIsHighContrast,
+      globalSearchQuery,
+      setGlobalSearchQuery,
+      globalSearchCategory,
+      setGlobalSearchCategory,
       instruments,
       inspections,
       certificates,
@@ -443,6 +530,7 @@ export const LMProvider: React.FC<{ children: React.ReactNode }> = ({ children }
       toggleQRTamperSimulation,
       triggerDemoAnomaly,
       resetDemoData,
+      getApplicationTimeline,
       toasts,
       addToast,
       removeToast,

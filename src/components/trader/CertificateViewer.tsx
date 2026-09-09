@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, QrCode, Printer, Download, Award, CheckCircle2, Lock } from 'lucide-react';
+import { ShieldCheck, QrCode, Printer, Download, Award, CheckCircle2, Lock, Scale } from 'lucide-react';
 import { Certificate, Instrument } from '../../types';
 
 interface CertificateViewerProps {
@@ -19,7 +19,7 @@ export const CertificateViewer: React.FC<CertificateViewerProps> = ({ certificat
       <div className="no-print flex justify-end space-x-2">
         <button
           onClick={handlePrint}
-          className="bg-gov-navy text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-slate-800 transition-colors flex items-center space-x-1.5 shadow"
+          className="bg-[#0B2348] text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-[#102A52] transition-colors flex items-center space-x-1.5 shadow"
         >
           <Printer className="w-4 h-4 text-amber-400" />
           <span>Print / Save PDF Certificate</span>
@@ -29,19 +29,19 @@ export const CertificateViewer: React.FC<CertificateViewerProps> = ({ certificat
       {/* Printable Certificate Parchment Box */}
       <div 
         id="printable-certificate"
-        className="bg-white border-8 border-double border-gov-navy p-8 rounded-xl shadow-xl space-y-6 text-slate-900 font-sans relative overflow-hidden"
+        className="bg-[#FDFBF7] border-8 border-double border-[#0B2348] p-8 rounded-xl shadow-xl space-y-6 text-slate-900 font-sans relative overflow-hidden"
       >
         {/* Subtle Watermark Badge */}
         <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
-          <ShieldCheck className="w-96 h-96 text-gov-navy" />
+          <Scale className="w-96 h-96 text-[#0B2348]" />
         </div>
 
-        {/* Prototype Banner */}
+        {/* Certificate Header Banner */}
         <div className="text-center border-b-2 border-slate-900 pb-4 space-y-1">
           <div className="text-[10px] uppercase font-bold tracking-widest text-slate-500">
             DIGITAL PROTOTYPE CERTIFICATE — SIH 2026
           </div>
-          <div className="font-heading font-extrabold text-xl text-gov-navy uppercase tracking-tight">
+          <div className="font-heading font-extrabold text-xl text-[#0B2348] uppercase tracking-tight">
             GOVERNMENT OF INDIA
           </div>
           <div className="text-xs font-bold text-slate-800">
@@ -50,10 +50,13 @@ export const CertificateViewer: React.FC<CertificateViewerProps> = ({ certificat
           <div className="text-xs font-bold text-amber-800 uppercase tracking-wide">
             DEPARTMENT OF CONSUMER AFFAIRS — LEGAL METROLOGY DIVISION
           </div>
+          <div className="text-sm font-extrabold text-[#0B2348] pt-1">
+            LEGAL METRIX NATIONAL CERTIFICATION SYSTEM
+          </div>
         </div>
 
         {/* Title */}
-        <div className="text-center py-2 bg-slate-50 border-y border-slate-200">
+        <div className="text-center py-2 bg-slate-100 border-y border-slate-300">
           <h2 className="font-heading font-extrabold text-lg text-slate-900 uppercase tracking-wider">
             CERTIFICATE OF VERIFICATION
           </h2>
@@ -65,7 +68,7 @@ export const CertificateViewer: React.FC<CertificateViewerProps> = ({ certificat
         {/* Certificate Details Grid */}
         <div className="grid grid-cols-2 gap-4 text-xs">
           
-          <div className="space-y-1.5 border-r border-slate-200 pr-4">
+          <div className="space-y-1.5 border-r border-slate-300 pr-4">
             <div>
               <span className="text-slate-500">Certificate Number:</span>
               <div className="font-mono font-extrabold text-slate-900 text-sm">{certificate.id}</div>
@@ -115,7 +118,7 @@ export const CertificateViewer: React.FC<CertificateViewerProps> = ({ certificat
 
             <div>
               <span className="text-slate-500">Valid Up To:</span>
-              <div className="font-extrabold text-emerald-700 text-sm">{certificate.expiryDate}</div>
+              <div className="font-extrabold text-emerald-800 text-sm">{certificate.expiryDate}</div>
             </div>
           </div>
 
@@ -126,8 +129,8 @@ export const CertificateViewer: React.FC<CertificateViewerProps> = ({ certificat
           <div className="flex items-center space-x-3">
             <CheckCircle2 className="w-8 h-8 text-emerald-600 flex-shrink-0" />
             <div>
-              <div className="font-bold text-emerald-900 text-sm">VERIFICATION STATUS: PASSED & CERTIFIED</div>
-              <div className="text-emerald-700 text-[11px]">
+              <div className="font-bold text-emerald-950 text-sm">VERIFICATION STATUS: PASSED & CERTIFIED</div>
+              <div className="text-emerald-800 text-[11px]">
                 Instrument error calibration complies strictly with statutory Class III Maximum Permissible Error (MPE) tolerances.
               </div>
             </div>
@@ -135,7 +138,7 @@ export const CertificateViewer: React.FC<CertificateViewerProps> = ({ certificat
 
           <div className="text-right font-mono text-[10px] text-slate-500 hidden sm:block">
             <span>SEAL REF:</span><br />
-            <span className="font-bold text-slate-800">GOV-LM-2026-OK</span>
+            <span className="font-bold text-slate-800">LM-SEAL-2026-OK</span>
           </div>
         </div>
 
@@ -149,14 +152,14 @@ export const CertificateViewer: React.FC<CertificateViewerProps> = ({ certificat
             </div>
             <div className="text-[10px] space-y-0.5 font-mono">
               <div className="font-bold text-slate-900">Cryptographic Seal</div>
-              <div className="text-emerald-700 font-bold">HMAC-SHA256: VALID</div>
+              <div className="text-emerald-800 font-bold">HMAC-SHA256: VALID</div>
               <div className="text-slate-500 truncate max-w-[140px]">{certificate.qrSignature}</div>
             </div>
           </div>
 
           {/* Officer Signature */}
           <div className="text-right space-y-1">
-            <div className="font-serif italic text-slate-800 text-sm font-bold border-b border-slate-400 pb-1 inline-block">
+            <div className="font-serif italic text-slate-900 text-sm font-bold border-b border-slate-400 pb-1 inline-block">
               {certificate.inspectorName}
             </div>
             <div className="text-[10px] text-slate-600 font-bold">Legal Metrology Officer</div>

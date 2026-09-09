@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
   X, Play, ShieldAlert, WifiOff, RefreshCw, UserCheck, 
-  RotateCcw, Sliders, CheckCircle2, ChevronRight, AlertTriangle
+  RotateCcw, Sliders, CheckCircle2, ChevronRight, AlertTriangle, Scale 
 } from 'lucide-react';
 import { useLM } from '../../context/LMContext';
 import { UserRole } from '../../types';
@@ -25,17 +25,17 @@ export const DemoControls: React.FC<DemoControlsProps> = ({ isOpen, onClose }) =
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden bg-slate-950/70 backdrop-blur-xs flex justify-end">
-      <div className="w-full max-w-md bg-slate-900 text-white h-full shadow-2xl flex flex-col border-l border-slate-700 animate-in slide-in-from-right duration-300">
+      <div className="w-full max-w-md bg-[#07152F] text-white h-full shadow-2xl flex flex-col border-l border-slate-700 animate-in slide-in-from-right duration-300">
         
         {/* Drawer Header */}
-        <div className="bg-gov-navy px-5 py-4 border-b border-slate-700 flex items-center justify-between">
+        <div className="bg-[#0B2348] px-5 py-4 border-b border-slate-700 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <div className="bg-gov-saffron p-1 rounded text-slate-950">
-              <Sliders className="w-5 h-5" />
+            <div className="w-8 h-8 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center font-bold">
+              <Scale className="w-5 h-5 stroke-[2.2]" />
             </div>
             <div>
-              <h3 className="font-heading font-bold text-base text-white">SIH 2026 Presentation Control</h3>
-              <p className="text-[11px] text-amber-300">Interactive Demo Workflows & Simulations</p>
+              <h3 className="font-heading font-bold text-base text-white">Legal Metrix — Demo Panel</h3>
+              <p className="text-[11px] text-amber-300">SIH 2026 Presentation Story & Control</p>
             </div>
           </div>
           <button 
@@ -47,7 +47,7 @@ export const DemoControls: React.FC<DemoControlsProps> = ({ isOpen, onClose }) =
         </div>
 
         {/* Content Body */}
-        <div className="flex-1 overflow-y-auto p-5 space-y-6 text-xs">
+        <div className="flex-1 overflow-y-auto p-5 space-y-6 text-xs text-left">
           
           {/* Quick Presentation Story Acts */}
           <div>
@@ -62,7 +62,7 @@ export const DemoControls: React.FC<DemoControlsProps> = ({ isOpen, onClose }) =
                   setCurrentTab('trader-register');
                   onClose();
                 }}
-                className="w-full text-left p-2.5 rounded-lg bg-slate-800 hover:bg-slate-750 border border-slate-700 transition-all flex items-center justify-between group"
+                className="w-full text-left p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 transition-all flex items-center justify-between group"
               >
                 <div>
                   <div className="font-bold text-amber-300 text-xs">ACT 1 — Trader Registration & Fee</div>
@@ -77,7 +77,7 @@ export const DemoControls: React.FC<DemoControlsProps> = ({ isOpen, onClose }) =
                   setCurrentTab('inspector-field');
                   onClose();
                 }}
-                className="w-full text-left p-2.5 rounded-lg bg-slate-800 hover:bg-slate-750 border border-slate-700 transition-all flex items-center justify-between group"
+                className="w-full text-left p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 transition-all flex items-center justify-between group"
               >
                 <div>
                   <div className="font-bold text-emerald-300 text-xs">ACT 2 — Inspector Field Mobile App</div>
@@ -92,7 +92,7 @@ export const DemoControls: React.FC<DemoControlsProps> = ({ isOpen, onClose }) =
                   setCurrentTab('public-qr');
                   onClose();
                 }}
-                className="w-full text-left p-2.5 rounded-lg bg-slate-800 hover:bg-slate-750 border border-slate-700 transition-all flex items-center justify-between group"
+                className="w-full text-left p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 transition-all flex items-center justify-between group"
               >
                 <div>
                   <div className="font-bold text-blue-300 text-xs">ACT 3 — Public Zero-Login QR Scan</div>
@@ -107,7 +107,7 @@ export const DemoControls: React.FC<DemoControlsProps> = ({ isOpen, onClose }) =
                   setCurrentTab('admin-command');
                   onClose();
                 }}
-                className="w-full text-left p-2.5 rounded-lg bg-slate-800 hover:bg-slate-750 border border-slate-700 transition-all flex items-center justify-between group"
+                className="w-full text-left p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 transition-all flex items-center justify-between group"
               >
                 <div>
                   <div className="font-bold text-purple-300 text-xs">ACT 4 — Government Command Center</div>
@@ -134,8 +134,8 @@ export const DemoControls: React.FC<DemoControlsProps> = ({ isOpen, onClose }) =
                   }}
                   className={`p-2 rounded font-bold uppercase text-[11px] border text-center transition-all ${
                     activeRole === role
-                      ? 'bg-gov-saffron text-slate-950 border-amber-400 shadow'
-                      : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700'
+                      ? 'bg-gov-saffron text-white border-amber-400 shadow'
+                      : 'bg-slate-900 text-slate-300 border-slate-700 hover:bg-slate-800'
                   }`}
                 >
                   {role}
@@ -158,7 +158,7 @@ export const DemoControls: React.FC<DemoControlsProps> = ({ isOpen, onClose }) =
                 className={`w-full p-2.5 rounded-lg border text-left flex items-center space-x-2 transition-all ${
                   targetDemoInstrument.isTampered
                     ? 'bg-red-500/20 border-red-500/50 text-red-200'
-                    : 'bg-slate-800 border-slate-700 text-slate-200 hover:bg-slate-750'
+                    : 'bg-slate-900 border-slate-700 text-slate-200 hover:bg-slate-800'
                 }`}
               >
                 <ShieldAlert className="w-4 h-4 text-red-400 flex-shrink-0" />
@@ -173,7 +173,7 @@ export const DemoControls: React.FC<DemoControlsProps> = ({ isOpen, onClose }) =
               {/* Anomaly Generator */}
               <button
                 onClick={() => triggerDemoAnomaly()}
-                className="w-full p-2.5 rounded-lg bg-slate-800 hover:bg-slate-750 border border-slate-700 text-left flex items-center space-x-2 transition-all"
+                className="w-full p-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-left flex items-center space-x-2 transition-all"
               >
                 <AlertTriangle className="w-4 h-4 text-amber-400 flex-shrink-0" />
                 <div>
@@ -183,7 +183,7 @@ export const DemoControls: React.FC<DemoControlsProps> = ({ isOpen, onClose }) =
               </button>
 
               {/* Offline Mode Toggle & Sync */}
-              <div className="p-2.5 rounded-lg bg-slate-800 border border-slate-700 space-y-2">
+              <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-700 space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <WifiOff className="w-4 h-4 text-blue-400" />
@@ -220,10 +220,10 @@ export const DemoControls: React.FC<DemoControlsProps> = ({ isOpen, onClose }) =
           <div className="pt-4 border-t border-slate-800">
             <button
               onClick={resetDemoData}
-              className="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white rounded border border-slate-700 font-bold text-xs flex items-center justify-center space-x-1.5 transition-colors"
+              className="w-full py-2 bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white rounded border border-slate-700 font-bold text-xs flex items-center justify-center space-x-1.5 transition-colors"
             >
               <RotateCcw className="w-3.5 h-3.5" />
-              <span>Reset Demo State to Initial Seed</span>
+              <span>Reset Demo State to Baseline</span>
             </button>
           </div>
 

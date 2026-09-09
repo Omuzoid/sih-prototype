@@ -1,8 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { 
   Smartphone, MapPin, QrCode, CheckCircle2, AlertTriangle, 
   Camera, Calculator, PenTool, RefreshCw, ShieldCheck, 
-  WifiOff, ArrowRight, ArrowLeft, RotateCcw, Clock, Upload, Check, X 
+  WifiOff, ArrowRight, ArrowLeft, RotateCcw, Clock, Upload, Check, X, Scale 
 } from 'lucide-react';
 import { useLM } from '../../context/LMContext';
 import { InspectionRecord, MeasurementRecord, PhysicalCheckitem } from '../../types';
@@ -18,11 +18,9 @@ export const InspectorMobileApp: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'assignments' | 'inspection' | 'sync'>('assignments');
   const [selectedInspection, setSelectedInspection] = useState<InspectionRecord | null>(inspections[0] || null);
 
-  // Inspection Wizard State
   const [wizardStep, setWizardStep] = useState<number>(1);
   const [gpsSimLocation, setGpsSimLocation] = useState<'PREMISES' | '500M_AWAY'>('PREMISES');
 
-  // Physical Checklist State
   const [checklist, setChecklist] = useState<PhysicalCheckitem[]>([
     { id: 'c1', title: 'Instrument Intact & Housing Sealed', category: 'PHYSICAL', status: 'PASS' },
     { id: 'c2', title: 'Display Readout Functional & Zero Clear', category: 'PHYSICAL', status: 'PASS' },
@@ -31,11 +29,9 @@ export const InspectorMobileApp: React.FC = () => {
     { id: 'c5', title: 'Standard Test Weight Calibration Check', category: 'CALIBRATION', status: 'PASS' }
   ]);
 
-  // AI OCR State
   const [isOcrScanning, setIsOcrScanning] = useState<boolean>(false);
   const [ocrDetectedValue, setOcrDetectedValue] = useState<number | null>(null);
 
-  // MPE Test Weights State
   const [measurements, setMeasurements] = useState<MeasurementRecord[]>([
     calculateMPE(10.0, 10.005, 'CLASS_III'),
     calculateMPE(25.0, 25.010, 'CLASS_III')
@@ -44,12 +40,10 @@ export const InspectorMobileApp: React.FC = () => {
   const [newTestWeight, setNewTestWeight] = useState<string>('50.0');
   const [newObservedWeight, setNewObservedWeight] = useState<string>('50.020');
 
-  // Signature
   const [isSigned, setIsSigned] = useState<boolean>(true);
   const [signatureText, setSignatureText] = useState<string>('Ramesh K. Patel (LM-INS-1029)');
   const [remarks, setRemarks] = useState<string>('Instrument verified in accordance with Legal Metrology Rules 2011.');
 
-  // Final Result
   const isOverallPass = checklist.every(c => c.status === 'PASS' || c.status === 'NA') && 
                         measurements.every(m => m.result === 'PASS');
 
@@ -64,7 +58,6 @@ export const InspectorMobileApp: React.FC = () => {
     setTimeout(() => {
       setIsOcrScanning(false);
       setOcrDetectedValue(10.020);
-      // Auto add to measurement table
       const newM = calculateMPE(10.0, 10.020, 'CLASS_III');
       setMeasurements(prev => [...prev, newM]);
     }, 1500);
@@ -101,21 +94,21 @@ export const InspectorMobileApp: React.FC = () => {
     };
 
     submitInspection(completedRecord);
-    setWizardStep(7); // Final decision screen
+    setWizardStep(7);
   };
 
   return (
     <div className="max-w-md mx-auto px-2 py-4 space-y-4 text-left font-sans pb-20">
       
       {/* Mobile Header Bar */}
-      <div className="bg-gov-navy text-white p-4 rounded-2xl shadow-lg border border-slate-800 space-y-3">
+      <div className="bg-[#0B2348] text-white p-4 rounded-2xl shadow-lg border border-slate-800 space-y-3">
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 rounded-full bg-amber-400 text-slate-950 font-bold flex items-center justify-center text-xs">
-              <Smartphone className="w-4 h-4" />
+              <Scale className="w-4 h-4 stroke-[2.2]" />
             </div>
             <div>
-              <div className="font-heading font-extrabold text-sm text-white">LM-DVS Field Inspector App</div>
+              <div className="font-heading font-extrabold text-sm text-white">Legal Metrix Field Inspector App</div>
               <div className="text-[10px] text-amber-300">Officer: Ramesh K. Patel (LM-INS-1029)</div>
             </div>
           </div>
@@ -134,11 +127,11 @@ export const InspectorMobileApp: React.FC = () => {
         </div>
 
         {/* Navigation Switcher */}
-        <div className="grid grid-cols-3 gap-1 bg-slate-950/60 p-1 rounded-xl text-center text-xs font-bold">
+        <div className="grid grid-cols-3 gap-1 bg-[#07152F] p-1 rounded-xl text-center text-xs font-bold">
           <button
             onClick={() => setActiveTab('assignments')}
             className={`py-1.5 rounded-lg transition-all ${
-              activeTab === 'assignments' ? 'bg-gov-saffron text-slate-950 shadow-xs' : 'text-slate-300'
+              activeTab === 'assignments' ? 'bg-gov-saffron text-white shadow-xs' : 'text-slate-300'
             }`}
           >
             Today's Visits
@@ -147,7 +140,7 @@ export const InspectorMobileApp: React.FC = () => {
           <button
             onClick={() => setActiveTab('inspection')}
             className={`py-1.5 rounded-lg transition-all ${
-              activeTab === 'inspection' ? 'bg-gov-saffron text-slate-950 shadow-xs' : 'text-slate-300'
+              activeTab === 'inspection' ? 'bg-gov-saffron text-white shadow-xs' : 'text-slate-300'
             }`}
           >
             Inspection
@@ -156,7 +149,7 @@ export const InspectorMobileApp: React.FC = () => {
           <button
             onClick={() => setActiveTab('sync')}
             className={`py-1.5 rounded-lg transition-all flex items-center justify-center space-x-1 ${
-              activeTab === 'sync' ? 'bg-gov-saffron text-slate-950 shadow-xs' : 'text-slate-300'
+              activeTab === 'sync' ? 'bg-gov-saffron text-white shadow-xs' : 'text-slate-300'
             }`}
           >
             <span>Sync ({offlineQueue.length})</span>
@@ -169,7 +162,7 @@ export const InspectorMobileApp: React.FC = () => {
         <div className="space-y-3 animate-in fade-in duration-200">
           <div className="flex justify-between items-center text-xs font-bold text-slate-700 px-1">
             <span>Scheduled Audits ({inspections.length})</span>
-            <span className="text-amber-700 font-mono">Jaipur Urban</span>
+            <span className="text-amber-800 font-mono">Jaipur Urban</span>
           </div>
 
           {inspections.map(insp => (
@@ -200,7 +193,7 @@ export const InspectorMobileApp: React.FC = () => {
                 <span className="text-[10px] text-slate-400 font-mono">Dist: 2.4 km away</span>
                 <button
                   onClick={() => handleStartInspection(insp)}
-                  className="bg-gov-navy hover:bg-slate-800 text-white font-bold text-xs px-4 py-1.5 rounded-lg flex items-center space-x-1 shadow"
+                  className="bg-[#0B2348] hover:bg-[#102A52] text-white font-bold text-xs px-4 py-1.5 rounded-lg flex items-center space-x-1 shadow"
                 >
                   <span>Start Audit</span>
                   <ArrowRight className="w-3.5 h-3.5 text-amber-400" />
@@ -216,7 +209,7 @@ export const InspectorMobileApp: React.FC = () => {
         <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden text-xs animate-in fade-in duration-200">
           
           {/* Step Bar */}
-          <div className="bg-slate-900 text-white p-3 flex justify-between items-center">
+          <div className="bg-[#07152F] text-white p-3 flex justify-between items-center">
             <span className="font-bold text-[11px] text-amber-300 uppercase">
               STEP {wizardStep} / 7 — {selectedInspection.instrumentId}
             </span>
@@ -241,7 +234,7 @@ export const InspectorMobileApp: React.FC = () => {
                   <div className="font-bold text-slate-900">Scan Instrument QR Sticker</div>
                   <button
                     onClick={() => setWizardStep(2)}
-                    className="bg-gov-saffron text-slate-950 font-extrabold px-4 py-2 rounded-lg shadow"
+                    className="bg-gov-saffron text-white font-extrabold px-4 py-2 rounded-lg shadow"
                   >
                     Simulate QR Scan Match ✓
                   </button>
@@ -293,7 +286,7 @@ export const InspectorMobileApp: React.FC = () => {
 
                 <div className="flex justify-between pt-2">
                   <button onClick={() => setWizardStep(1)} className="px-3 py-1.5 text-slate-600 font-bold">Back</button>
-                  <button onClick={() => setWizardStep(3)} className="bg-gov-navy text-white px-5 py-2 rounded-lg font-bold">Next: Checklist</button>
+                  <button onClick={() => setWizardStep(3)} className="bg-[#0B2348] text-white px-5 py-2 rounded-lg font-bold">Next: Checklist</button>
                 </div>
               </div>
             )}
@@ -323,7 +316,7 @@ export const InspectorMobileApp: React.FC = () => {
 
                 <div className="flex justify-between pt-2">
                   <button onClick={() => setWizardStep(2)} className="px-3 py-1.5 text-slate-600 font-bold">Back</button>
-                  <button onClick={() => setWizardStep(4)} className="bg-gov-navy text-white px-5 py-2 rounded-lg font-bold">Next: AI OCR</button>
+                  <button onClick={() => setWizardStep(4)} className="bg-[#0B2348] text-white px-5 py-2 rounded-lg font-bold">Next: AI OCR</button>
                 </div>
               </div>
             )}
@@ -354,7 +347,7 @@ export const InspectorMobileApp: React.FC = () => {
                   <button
                     onClick={handleRunAIOCR}
                     disabled={isOcrScanning}
-                    className="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-extrabold rounded-lg shadow flex items-center justify-center space-x-1"
+                    className="w-full py-2.5 bg-purple-700 hover:bg-purple-800 text-white font-extrabold rounded-lg shadow flex items-center justify-center space-x-1"
                   >
                     {isOcrScanning ? (
                       <span>Analyzing Digit Readout...</span>
@@ -366,7 +359,7 @@ export const InspectorMobileApp: React.FC = () => {
 
                 <div className="flex justify-between pt-2">
                   <button onClick={() => setWizardStep(3)} className="px-3 py-1.5 text-slate-600 font-bold">Back</button>
-                  <button onClick={() => setWizardStep(5)} className="bg-gov-navy text-white px-5 py-2 rounded-lg font-bold">Next: MPE Check</button>
+                  <button onClick={() => setWizardStep(5)} className="bg-[#0B2348] text-white px-5 py-2 rounded-lg font-bold">Next: MPE Check</button>
                 </div>
               </div>
             )}
@@ -396,7 +389,7 @@ export const InspectorMobileApp: React.FC = () => {
                   </div>
                   <button
                     onClick={handleAddMeasurement}
-                    className="w-full py-1.5 bg-gov-saffron text-slate-950 font-bold rounded shadow-xs"
+                    className="w-full py-1.5 bg-gov-saffron text-white font-bold rounded shadow-xs"
                   >
                     Compute MPE Error & Add
                   </button>
@@ -420,7 +413,7 @@ export const InspectorMobileApp: React.FC = () => {
 
                 <div className="flex justify-between pt-2">
                   <button onClick={() => setWizardStep(4)} className="px-3 py-1.5 text-slate-600 font-bold">Back</button>
-                  <button onClick={() => setWizardStep(6)} className="bg-gov-navy text-white px-5 py-2 rounded-lg font-bold">Next: Signature</button>
+                  <button onClick={() => setWizardStep(6)} className="bg-[#0B2348] text-white px-5 py-2 rounded-lg font-bold">Next: Signature</button>
                 </div>
               </div>
             )}
@@ -461,7 +454,7 @@ export const InspectorMobileApp: React.FC = () => {
                   <button onClick={() => setWizardStep(5)} className="px-3 py-1.5 text-slate-600 font-bold">Back</button>
                   <button
                     onClick={handleCompleteFinalInspection}
-                    className="bg-gov-saffron text-slate-950 font-extrabold px-6 py-2.5 rounded-lg shadow border border-amber-400"
+                    className="bg-gov-saffron text-white font-extrabold px-6 py-2.5 rounded-lg shadow"
                   >
                     Submit Audit & Issue Certificate
                   </button>
@@ -488,14 +481,14 @@ export const InspectorMobileApp: React.FC = () => {
                 </div>
 
                 <div className="bg-slate-50 p-3 rounded-xl border space-y-1 text-xs text-left font-mono">
-                  <div>GPS Audit: <strong className="text-emerald-700">VERIFIED (14m)</strong></div>
+                  <div>GPS Audit: <strong className="text-emerald-800">VERIFIED (14m)</strong></div>
                   <div>MPE Calibration: <strong>{isOverallPass ? 'PASS' : 'FAIL'}</strong></div>
                   <div>HMAC Token: <strong>GENERATED & SIGNED</strong></div>
                 </div>
 
                 <button
                   onClick={() => setActiveTab('assignments')}
-                  className="bg-gov-navy text-white font-bold text-xs px-6 py-2.5 rounded-lg hover:bg-slate-800"
+                  className="bg-[#0B2348] text-white font-bold text-xs px-6 py-2.5 rounded-lg hover:bg-[#102A52]"
                 >
                   Return to Assignments List
                 </button>
@@ -512,7 +505,7 @@ export const InspectorMobileApp: React.FC = () => {
         <div className="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm space-y-4 text-xs animate-in fade-in duration-200">
           <div className="flex justify-between items-center border-b pb-2">
             <h3 className="font-heading font-bold text-slate-900 text-sm">Offline Local Sync Queue</h3>
-            <span className="font-bold text-amber-700 font-mono">{offlineQueue.length} Pending</span>
+            <span className="font-bold text-amber-800 font-mono">{offlineQueue.length} Pending</span>
           </div>
 
           <p className="text-slate-600">
